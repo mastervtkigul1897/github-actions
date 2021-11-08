@@ -1,24 +1,22 @@
-name: Firebase Continuous Deployment
+name: Deploy to Live Channel
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+    # Optionally configure to run only for specific files. For example:
+    # paths:
+    # - "website/**"
 
 jobs:
-  deploy:
+  deploy_live_website:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      # Add any build steps here. For example:
+      # - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
         with:
-          node-version: 12
-      - run: firebase init hosting
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-      - uses: w9jds/firebase-action@master
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        with:
-          args: deploy --only hosting
+          firebaseServiceAccount: "${{ secrets.FIREBASE_TOKEN }}"
+          projectId: github-actions-demo-76fa9
+          channelId: live
